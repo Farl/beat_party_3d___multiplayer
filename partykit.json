@@ -1,0 +1,5 @@
+{
+  "name": "beat-party-3d-multiplayer",
+  "main": "node_modules/websim-socket/src/server/index.ts",
+  "compatibilityDate": "2026-04-26"
+}

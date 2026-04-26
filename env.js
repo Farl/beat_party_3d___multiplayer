@@ -1,0 +1,1 @@
+export const PARTYKIT_HOST = "__PARTYKIT_HOST__";

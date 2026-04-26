@@ -1,0 +1,16 @@
+{
+  "name": "beat-party-3d-multiplayer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "partykit dev",
+    "deploy:socket": "partykit deploy",
+    "build:pages": "node ./scripts/prepare-pages.mjs"
+  },
+  "dependencies": {
+    "websim-socket": "latest"
+  },
+  "devDependencies": {
+    "partykit": "latest"
+  }
+}
