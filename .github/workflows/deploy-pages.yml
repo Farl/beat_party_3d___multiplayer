@@ -13,10 +13,12 @@ permissions:
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
+    # Enable the host switch only after the backend passes production smoke tests.
+    if: ${{ vars.PARTYSERVER_HOST != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,16 +27,26 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build Pages artifact
+      # Keep the legacy PartyKit secret untouched until migration is verified.
+
+      - name: Test Pages build
+        run: npm test
+
+      - name: Build production assets
         env:
-          PARTYKIT_HOST: ${{ secrets.PARTYKIT_HOST }}
+          PARTYKIT_HOST: ${{ vars.PARTYSERVER_HOST }}
         run: npm run build:pages
+
+      - name: Validate Worker bundle
+        run: npm run check:worker
+
+      # Cloudflare Workers Builds deploys the backend from this repository.
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

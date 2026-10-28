@@ -29,6 +29,12 @@ if (!partyKitHost) {
   throw new Error("PARTYKIT_HOST is required to build the GitHub Pages bundle.");
 }
 
+// Reject malformed hosts before touching the previous build.
+const parsedHost = new URL(`https://${partyKitHost}`);
+if (parsedHost.host !== partyKitHost || parsedHost.pathname !== "/" || parsedHost.search || parsedHost.hash || parsedHost.username || parsedHost.password) {
+  throw new Error("PARTYKIT_HOST must be a hostname with optional port, without a scheme or path.");
+}
+
 fs.rmSync(distDir, { recursive: true, force: true });
 fs.mkdirSync(distDir, { recursive: true });
 
@@ -39,7 +45,7 @@ for (const relativePath of filesToCopy) {
   fs.mkdirSync(targetDir, { recursive: true });
 
   if (relativePath === "env.js") {
-    const content = fs.readFileSync(sourcePath, "utf8").replace("__PARTYKIT_HOST__", partyKitHost);
+    const content = fs.readFileSync(sourcePath, "utf8").replace('"__PARTYKIT_HOST__"', JSON.stringify(partyKitHost));
     fs.writeFileSync(targetPath, content);
     continue;
   }

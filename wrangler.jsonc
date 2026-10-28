@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "beat-party-3d-multiplayer-migration",
+  "main": "server/index.js",
+  "compatibility_date": "2026-10-20",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "Main",
+        "class_name": "WebsimServer"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "WebsimServer"
+      ]
+    }
+  ],
+  "assets": {
+    "directory": "./dist",
+    "run_worker_first": [
+      "/parties/*"
+    ]
+  },
+  "observability": {
+    "enabled": false
+  },
+  "send_metrics": false
+}
